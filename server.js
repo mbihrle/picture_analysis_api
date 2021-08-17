@@ -24,16 +24,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// app.get("/", (req, res) => {
-//     res.json(database.users);
-// });
-
+app.get("/", (req, res) => {
+    res.json("it is working");
+});
 app.post("/signin", signin.handleSignin(db, bcrypt));
 app.post("/register", register.handleRegister(db, bcrypt, saltRounds));
 app.get("/profile/:id", profile.handleProfileGet(db));
 app.put("/image", image.handleImage(db));
 app.post("/imageurl", image.handleApiCall);
 
-app.listen(3000, () => {
-    console.log("app is running on port 3000");
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`app is running on port ${process.env.PORT || 3000}`);
 });
