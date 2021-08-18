@@ -2,33 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const knex = require("knex");
+require("dotenv").config();
 
+const database = require("./controllers/database");
 const register = require("./controllers/register");
 const signin = require("./controllers/signin");
 const profile = require("./controllers/profile");
 const image = require("./controllers/image");
 
-// const db = knex({
-//     client: "pg",
-//     connection: {
-//         connectionString: process.env.DATABASE_URL,
-//         ssl: {
-//             rejectUnauthorized: false,
-//         },
-//     },
-// });
-
-const db = knex({
-    client: "pg",
-    connection: {
-        host: "127.0.0.1",
-        user: "bihrl",
-        password: "bihrl",
-        database: "picture_analysis",
-    },
-});
-
+const db = database.getDatabase(process.env.NODE_ENV);
 const app = express();
 
 app.use(cors());
@@ -43,6 +25,5 @@ app.get("/profile/:id", profile.handleProfileGet(db));
 app.put("/image", image.handleImage(db));
 app.post("/imageurl", image.handleApiCall);
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`app is running on port ${process.env.PORT || 3000}`);
-});
+const port = process.env.PORT;
+app.listen(port, () => console.log(`server is running on port ${port}`));
